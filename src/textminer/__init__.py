@@ -27,7 +27,7 @@ def extract(text, rule, fmt='yaml'):
     'abc'
     '''
     extractor = compile(rule, fmt=fmt)
-    return extractor.parse(text)
+    return extractor.extract(text)
 
 def extract_from_url(url, rule, charset=None, fmt='yaml'):
     html = urllib2.urlopen(url, timeout=30)

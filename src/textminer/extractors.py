@@ -12,7 +12,7 @@ class Extractor(object):
         self._child = None
         self._compile(rule)
         
-    def parse(self, text):
+    def extract(self, text):
         raise NotImplementedError()
     
     def _compile(self, rule):
@@ -33,10 +33,10 @@ class Extractor(object):
         return value
         
     def _process_child(self, value):
-        return self._child.parse(value) if self._child else value
+        return self._child.extract(value) if self._child else value
         
 class ValueExtractor(Extractor):
-    def parse(self, text):
+    def extract(self, text):
         value, _ = self.parse_with_end(text)
         return value
     
@@ -54,12 +54,12 @@ class ValueExtractor(Extractor):
         return value, end
     
 class ListExtractor(Extractor):
-    def parse(self, text):
+    def extract(self, text):
         '''
         >>> p = ListExtractor({'prefix': '<li>', 'suffix': '</li>'})
-        >>> p.parse('<ul><li>item1</li><li>item2</li></ul>')
+        >>> p.extract('<ul><li>item1</li><li>item2</li></ul>')
         ['item1', 'item2']
-        >>> p.parse('<ul></ul>')
+        >>> p.extract('<ul></ul>')
         []
         '''
         items = []
@@ -83,12 +83,12 @@ class DictExtractor(Extractor):
         self._keys = [field['key'] for field in rule]
         self._children = [create('value', field) for field in rule]
         
-    def parse(self, text):
+    def extract(self, text):
         '''
         >>> p = DictExtractor([{'key': 'name', 'type': 'string', 'prefix': '<td id="1">', 'suffix': '</td>'}, {'key': 'value', 'type': 'int', 'prefix': '<td id="2">', 'suffix': '</td>'}])
-        >>> p.parse('<tr><td id="1">abc</td><td id="2">123</td></tr>')
+        >>> p.extract('<tr><td id="1">abc</td><td id="2">123</td></tr>')
         {'name': 'abc', 'value': 123}
-        >>> p.parse('<tr></tr>')
+        >>> p.extract('<tr></tr>')
         {'name': None, 'value': None}
         '''
         values = {}
