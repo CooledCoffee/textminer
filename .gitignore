@@ -1,3 +1,4 @@
+.*
 *.py[cod]
 
 # C extensions
@@ -14,7 +15,6 @@ bin
 var
 sdist
 develop-eggs
-.installed.cfg
 lib
 lib64
 
@@ -22,14 +22,7 @@ lib64
 pip-log.txt
 
 # Unit test / coverage reports
-.coverage
-.tox
 nosetests.xml
 
 # Translations
 *.mo
-
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
