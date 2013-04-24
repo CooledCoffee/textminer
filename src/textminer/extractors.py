@@ -4,7 +4,7 @@ from textminer.matchers import RegexMatcher, StringMatcher
 import doctest
 import importlib
 
-class Parser(object):
+class Extractor(object):
     def __init__(self, rule):
         self._prefix_matcher = None
         self._suffix_matcher = None
@@ -23,7 +23,7 @@ class Parser(object):
         
     def _filter(self, value):
         '''
-        >>> p = Parser({'prefix': '<html>', 'suffix': '</html>'})
+        >>> p = Extractor({'prefix': '<html>', 'suffix': '</html>'})
         >>> p._filters = [DefaultFilter('0'), TypeFilter('int')]
         >>> p._filter(None)
         0
@@ -35,14 +35,14 @@ class Parser(object):
     def _process_child(self, value):
         return self._child.parse(value) if self._child else value
         
-class ValueParser(Parser):
+class ValueExtractor(Extractor):
     def parse(self, text):
         value, _ = self.parse_with_end(text)
         return value
     
     def parse_with_end(self, text):
         '''
-        >>> p = ValueParser({'prefix': '<body>', 'suffix': '</body>'})
+        >>> p = ValueExtractor({'prefix': '<body>', 'suffix': '</body>'})
         >>> p.parse_with_end('<html><body>abc</body></html>')
         ('abc', 22)
         >>> p.parse_with_end('<html><header>abc</header></html>')
@@ -53,10 +53,10 @@ class ValueParser(Parser):
         value = self._process_child(value)
         return value, end
     
-class ListParser(Parser):
+class ListExtractor(Extractor):
     def parse(self, text):
         '''
-        >>> p = ListParser({'prefix': '<li>', 'suffix': '</li>'})
+        >>> p = ListExtractor({'prefix': '<li>', 'suffix': '</li>'})
         >>> p.parse('<ul><li>item1</li><li>item2</li></ul>')
         ['item1', 'item2']
         >>> p.parse('<ul></ul>')
@@ -73,11 +73,11 @@ class ListParser(Parser):
             items.append(value)
         return items
     
-class DictParser(Parser):
+class DictExtractor(Extractor):
     def __init__(self, *args, **kw):
         self._keys = None
         self._children = None
-        super(DictParser, self).__init__(*args, **kw)
+        super(DictExtractor, self).__init__(*args, **kw)
         
     def _compile(self, rule):
         self._keys = [field['key'] for field in rule]
@@ -85,7 +85,7 @@ class DictParser(Parser):
         
     def parse(self, text):
         '''
-        >>> p = DictParser([{'key': 'name', 'type': 'string', 'prefix': '<td id="1">', 'suffix': '</td>'}, {'key': 'value', 'type': 'int', 'prefix': '<td id="2">', 'suffix': '</td>'}])
+        >>> p = DictExtractor([{'key': 'name', 'type': 'string', 'prefix': '<td id="1">', 'suffix': '</td>'}, {'key': 'value', 'type': 'int', 'prefix': '<td id="2">', 'suffix': '</td>'}])
         >>> p.parse('<tr><td id="1">abc</td><td id="2">123</td></tr>')
         {'name': 'abc', 'value': 123}
         >>> p.parse('<tr></tr>')
@@ -103,11 +103,11 @@ def create(parser_type, rule):
     >>> rule = {'prefix': '<body>', 'suffix': '</body>'}
     >>> parser = create('value', rule)
     >>> type(parser).__name__
-    'ValueParser'
+    'ValueExtractor'
     '''
-    parser_class = globals().get(parser_type.capitalize() + 'Parser')
+    parser_class = globals().get(parser_type.capitalize() + 'Extractor')
     if parser_class is None:
-        raise Exception('Parser with type="%s" could not be found.' % parser_type)
+        raise Exception('Extractor with type="%s" could not be found.' % parser_type)
     return parser_class(rule)
 
 def _compile_child(rule):
@@ -119,7 +119,7 @@ def _compile_child(rule):
     >>> rule = {'prefix': '<body>', 'suffix': '</body>', 'value': {'prefix': '<b>', 'suffix': '</b>'}}
     >>> child = _compile_child(rule)
     >>> type(child).__name__
-    'ValueParser'
+    'ValueExtractor'
     '''
     for parser_type in ['value', 'list', 'dict']:
         if parser_type in rule:
