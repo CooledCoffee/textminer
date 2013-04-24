@@ -81,7 +81,7 @@ class DictParser(Parser):
         
     def _compile(self, rule):
         self._keys = [field['key'] for field in rule]
-        self._children = [create_parser('value', field) for field in rule]
+        self._children = [create('value', field) for field in rule]
         
     def parse(self, text):
         '''
@@ -98,10 +98,10 @@ class DictParser(Parser):
             end += temp_end
         return values
     
-def create_parser(parser_type, rule):
+def create(parser_type, rule):
     '''
     >>> rule = {'prefix': '<body>', 'suffix': '</body>'}
-    >>> parser = create_parser('value', rule)
+    >>> parser = create('value', rule)
     >>> type(parser).__name__
     'ValueParser'
     '''
@@ -123,7 +123,7 @@ def _compile_child(rule):
     '''
     for parser_type in ['value', 'list', 'dict']:
         if parser_type in rule:
-            return create_parser(parser_type, rule[parser_type])
+            return create(parser_type, rule[parser_type])
     else:
         return None
 
