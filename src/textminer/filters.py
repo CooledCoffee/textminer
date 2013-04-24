@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from textminer import util
 import datetime
 import doctest
 import re
@@ -84,18 +85,9 @@ class StripHtmlFilter(Filter):
         '''
         if value is None:
             return None
-        value = _compactHtml(value)
+        value = util.compactHtml(value)
         return re.sub('<.+?>', '', value)
     
-def _compactHtml(html):
-    '''
-    >>> _compactHtml('<div id="div1">\\n abc def \\n</div>')
-    '<div id="div1">abc def</div>'
-    '''
-    html = re.sub('\\s', ' ', html)
-    html = re.sub(' +', ' ', html)
-    return html.replace(' <', '<').replace('> ', '>')
-
 class TransformFilter(Filter):
     def __init__(self, expression):
         super(TransformFilter, self).__init__()
