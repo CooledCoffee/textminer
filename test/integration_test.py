@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
+from textminer import util
 from textminer.util import Dict
 from unittest.case import TestCase
 import textminer
-import urllib2
 
 class ExtractFromUrlTest(TestCase):
     def setUp(self):
-        self._old_url_open = urllib2.urlopen
-        html = '''
+        self._old_curl = util.curl
+        def _curl(url, charset=None):
+            return '''
 <html>
 <body>
 <h1>title</h1>
@@ -24,13 +25,11 @@ class ExtractFromUrlTest(TestCase):
 </body>
 </html>
 '''
-        def _urlopen(url, timeout=None):
-            return Dict(read=lambda: html)
-        urllib2.urlopen = _urlopen
+        util.curl = _curl
         super(ExtractFromUrlTest, self).setUp()
         
     def tearDown(self):
-        urllib2.urlopen = self._old_url_open
+        util.curl = self._old_curl
         super(ExtractFromUrlTest, self).tearDown()
         
     def test(self):

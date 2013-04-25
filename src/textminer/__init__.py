@@ -3,7 +3,6 @@ from textminer import extractors, util
 import doctest
 import importlib
 import json
-import urllib2
 import yaml
 
 def compile(rule, fmt='yaml'):
@@ -30,8 +29,7 @@ def extract(text, rule, fmt='yaml'):
     return extractor.extract(text)
 
 def extract_from_url(url, rule, charset=None, fmt='yaml'):
-    f = urllib2.urlopen(url, timeout=30)
-    html = f.read()
+    html = util.curl(url, charset=charset)
     html = util.compact_html(html)
     return extract(html, rule, fmt=fmt)
 
