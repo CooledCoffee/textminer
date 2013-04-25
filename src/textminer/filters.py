@@ -85,7 +85,7 @@ class StripHtmlFilter(Filter):
         '''
         if value is None:
             return None
-        value = util.compactHtml(value)
+        value = util.compact_html(value)
         return re.sub('<.+?>', '', value)
     
 class TransformFilter(Filter):

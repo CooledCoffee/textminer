@@ -32,7 +32,7 @@ def extract(text, rule, fmt='yaml'):
 def extract_from_url(url, rule, charset=None, fmt='yaml'):
     f = urllib2.urlopen(url, timeout=30)
     html = f.read()
-    html = util.compactHtml(html)
+    html = util.compact_html(html)
     return extract(html, rule, fmt=fmt)
 
 def _parse_rule(rule, fmt):

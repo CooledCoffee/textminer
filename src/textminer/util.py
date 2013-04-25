@@ -40,9 +40,9 @@ class Dict(dict):
         except KeyError, k:
             raise AttributeError(k)
         
-def compactHtml(html):
+def compact_html(html):
     '''
-    >>> compactHtml('<div id="div1">\\n abc def \\n</div>')
+    >>> compact_html('<div id="div1">\\n abc def \\n</div>')
     '<div id="div1">abc def</div>'
     '''
     html = re.sub('\\s', ' ', html)
