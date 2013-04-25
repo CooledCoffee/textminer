@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from textminer.util import Dict
 from unittest.case import TestCase
 import textminer
 import urllib2
@@ -6,8 +7,7 @@ import urllib2
 class ExtractFromUrlTest(TestCase):
     def setUp(self):
         self._old_url_open = urllib2.urlopen
-        def _urlopen(url, timeout=None):
-            return '''
+        html = '''
 <html>
 <body>
 <h1>title</h1>
@@ -24,6 +24,8 @@ class ExtractFromUrlTest(TestCase):
 </body>
 </html>
 '''
+        def _urlopen(url, timeout=None):
+            return Dict(read=lambda: html)
         urllib2.urlopen = _urlopen
         super(ExtractFromUrlTest, self).setUp()
         
