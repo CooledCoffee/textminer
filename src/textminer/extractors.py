@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from textminer.filters import DefaultFilter, TypeFilter
 from textminer.matchers import RegexMatcher, StringMatcher
+from textminer.util import Dict
 import doctest
 import importlib
 
@@ -91,7 +92,7 @@ class DictExtractor(Extractor):
         >>> p.extract('<tr></tr>')
         {'name': None, 'value': None}
         '''
-        values = {}
+        values = Dict()
         end = 0
         for i in range(len(self._keys)):
             values[self._keys[i]], temp_end = self._children[i].parse_with_end(text[end:])
