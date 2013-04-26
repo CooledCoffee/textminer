@@ -32,7 +32,7 @@ What if we want to extract from within the extracted values (a hierarchical extr
 The code quickly becomes tricky to write and difficult to understand.
 
 What is the human way of expressing such a problem?
-A human would say, I want the value between "`<body>`" and "`</body>`".
+A human would say, I want the value between `"<body>"` and `"</body>"`.
 Or in <a href="http://www.yaml.org/" target="_blank">yaml</a>:
 
 	value:
@@ -55,8 +55,8 @@ A more sophisticated example is:
 	    
 It means:
 
-1. Extract all values between "`<tr>`" and "`</tr>`" and form a list
-2. For each list item, extract a string id (between "`<td id="id">`" and "`</td>`") and an int value (between "`<td id="value">`" and "`</td>`")
+1. Extract all values between `"<tr>"` and `"</tr>"` and form a list
+2. For each list item, extract a string id (between `"<td id="id">"` and `"</td>"`) and an int value (between `"<td id="value">"` and `"</td>"`)
 
 TextMiner enables you to extract values, lists and dicts from text by writing such yaml rules.
 
