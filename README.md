@@ -1,7 +1,7 @@
 Introduction
 ============
-TextMiner extracts values, lists and dicts from text.
-It is mainly used to extract valuable information from web pages but can also be used on other text formats.
+Textminer extracts values, lists and dicts from text.
+It works on all text formats and is heavily used on html pages.
 
 The machine way of extracting a piece of text from a web page is by specifying the start index and the end index.
 Giving a piece of html `"<html><body>abc</body></html>"` and the text of interest "abc", we can do:
@@ -10,7 +10,7 @@ Giving a piece of html `"<html><body>abc</body></html>"` and the text of interes
 	end = html.find('</body>', start)
 	value = html[start:end]
 	
-For two values that may or may not exist? The code is something like this:
+For two values that may or may not exist? The code becomes more complicated:
 
 	start1 = html.find('<div id="value1">') + len('<div id="value1">')
 	if start1 == -1:
@@ -33,7 +33,7 @@ The code quickly becomes tricky to write and difficult to understand.
 
 What is the human way of expressing such a problem?
 A human would say, I want the value between "`<body>`" and "`</body>`".
-Or in [yaml](http://www.yaml.org/):
+Or in <a href="http://www.yaml.org/" target="_blank">yaml</a>:
 
 	value:
 	  prefix: <body>
@@ -55,7 +55,7 @@ A more sophisticated example is:
 	    
 It means:
 
-1. Extracts all values between "`<tr>`" and "`</tr>`" and form a list
+1. Extract all values between "`<tr>`" and "`</tr>`" and form a list
 2. For each list item, extract a string id (between "`<td id="id">`" and "`</td>`") and an int value (between "`<td id="value">`" and "`</td>`")
 
 TextMiner enables you to extract values, lists and dicts from text by writing such yaml rules.
@@ -63,6 +63,10 @@ TextMiner enables you to extract values, lists and dicts from text by writing su
 Installation
 ============
 pip install textminer
+
+or
+
+easy_install textminer
 
 Basic Usage
 ===========
