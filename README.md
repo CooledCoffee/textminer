@@ -209,3 +209,13 @@ Note that the fields in the rule should be in the order they appear in the html.
 	#     ]
 	# }
 	
+**Extract from a url**
+
+	import textminer
+	
+	rule = '''
+	value:
+	  prefix: <title>
+	  suffix: </title>
+	'''
+	textminer.extract_from_url('http://www.google.com/', rule)
