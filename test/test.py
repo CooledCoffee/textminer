@@ -4,11 +4,9 @@ from textminer.util import Dict
 from unittest.case import TestCase
 import textminer
 
-class ExtractFromUrlTest(TestCase):
-    def setUp(self):
-        self._old_curl = util.curl
-        def _curl(url, charset=None):
-            return '''
+class ExtractTest(TestCase):
+    def test(self):
+        html = '''
 <html>
 <body>
 <h1>title</h1>
@@ -25,14 +23,6 @@ class ExtractFromUrlTest(TestCase):
 </body>
 </html>
 '''
-        util.curl = _curl
-        super(ExtractFromUrlTest, self).setUp()
-        
-    def tearDown(self):
-        util.curl = self._old_curl
-        super(ExtractFromUrlTest, self).tearDown()
-        
-    def test(self):
         rule = '''
 dict:
 - key: title
@@ -53,11 +43,21 @@ dict:
       suffix: </td>
       type: int
 '''
-        result = textminer.extract_from_url('http://test.com/test', rule)
+        result = textminer.extract(html, rule)
         self.assertEquals('title', result['title'])
         self.assertEquals(2, len(result['items']))
         self.assertEquals('001', result['items'][0]['id'])
         self.assertEquals(123, result['items'][0]['value'])
         self.assertEquals('002', result['items'][1]['id'])
         self.assertEquals(321, result['items'][1]['value'])
+        
+class ExtractFromUrlTest(TestCase):
+    def test(self):
+        rule = '''
+value:
+  prefix: <title>
+  suffix: </title>
+'''
+        value = textminer.extract_from_url('http://www.google.com', rule)
+        self.assertEquals('Google', value)
         
