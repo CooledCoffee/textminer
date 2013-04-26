@@ -181,10 +181,10 @@ def _compile_filters(rule):
 def _compile_pattern(pattern):
     '''
     normal text
-    >>> _compile_pattern('a|b').match('b', 0)
-    (None, -1, -1)
-    >>> _compile_pattern('//a|b//').match('b', 0)
-    (None, -1, -1)
+    >>> _compile_pattern('a|b').match('a|b', 0)
+    ('a|b', 0, 3)
+    >>> _compile_pattern('//a|b//').match('/a|b/', 0)
+    ('a|b', 1, 4)
     
     regular expression
     >>> _compile_pattern('/a|b/').match('b', 0)
