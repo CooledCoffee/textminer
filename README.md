@@ -62,7 +62,7 @@ easy_install textminer
 
 Basic Usage
 ===========
-**Extract a single value from html**
+### Extract a single value from html ###
 
 	import textminer
 	
@@ -75,7 +75,7 @@ Basic Usage
 	result = textminer.extract(html, rule)
 	# result == 'abc'
 
-**Extract a list from html**
+### Extract a list from html ###
 
 	import textminer
 	
@@ -98,7 +98,7 @@ Basic Usage
 	result = textminer.extract(html, rule)
 	# result == ['aaa', 'bbb', 'ccc']
 	
-**Extract a dict from html**
+### Extract a dict from html ###
 
 	import textminer
 	
@@ -124,7 +124,7 @@ Basic Usage
 
 Note that the fields in the rule should be in the order they appear in the html.
 
-**Specify value type**
+### Specify value type ###
 
 	import textminer
 	
@@ -138,7 +138,7 @@ Note that the fields in the rule should be in the order they appear in the html.
 	result = textminer.extract(html, rule)
 	# result == 123
 	
-**Hierarchical extraction**
+### Hierarchical extraction ###
 
 The real power of textminer is to do hierarchical extraction.
 
@@ -190,7 +190,7 @@ The real power of textminer is to do hierarchical extraction.
 	#     ]
 	# }
 	
-**Extract from a url**
+### Extract from a url ###
 
 Since textminer is heavily used on web pages.
 It provides a utility function extract_from_url to download html and extract from it.
@@ -207,7 +207,7 @@ This saves you a few lines of code.
 
 Advanced Usage
 ==============
-**Filters**
+### Filters ###
 
 	import textminer
 	
@@ -223,7 +223,7 @@ Advanced Usage
 	'''
 	result = textminer.extract(html, rule)
 	
-**Regular expressions for prefix & suffix**
+### Regular expressions for prefix & suffix ###
 
 Regular expressions are denoted by "/" before and after the string.
 
@@ -237,7 +237,7 @@ Regular expressions are denoted by "/" before and after the string.
 	'''
 	result = textminer.extract(html, rule)
 
-**Using rules of other formats**
+### Using rules of other formats ###
 
 Yaml is perfect for the rules, but textminer also supports json and raw python dict.
 
