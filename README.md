@@ -3,14 +3,17 @@ Introduction
 Textminer extracts values, lists and dicts from text.
 It works on all text formats and is heavily used on html pages.
 
-The machine way of extracting a piece of text from a web page is by specifying the start index and the end index.
-Giving a piece of html `"<html><body>abc</body></html>"` and the text of interest "abc", we can do:
+Giving a piece of html
 
-	start = html.find('<body>') + len('<body>')
-	end = html.find('</body>', start)
-	value = html[start:end]
+	<html>
+	<body>
+	<div id="value1">111</div>
+	...
+	<div id="value2">222</div>
+	</body>
+	</html>
 	
-For two values that may or may not exist? The code becomes more complicated:
+The usual way of extracting the two values "111" and "222" is:
 
 	start1 = html.find('<div id="value1">') + len('<div id="value1">')
 	if start1 == -1:
@@ -19,46 +22,35 @@ For two values that may or may not exist? The code becomes more complicated:
 	else:
 	    end1 = html.find('</div>', start1)
 	    value1 = html[start1:end1]
+	    value1 = int(value1)
 	start2 = html.find('<div id="value2">') + len('<div id="value1">', end1)
 	if start2 == -1:
 	    value2 = None
 	else:
 	    end2 = html.find('</div>', start2)
 	    value2 = html[start2:end2]
+	    value2 = int(value2)
+
+The textminer's way of doing the same thing is:
+
+	import textminer
 	
-What if we need some type conversions?
-What if we need some filters or transformations?
-What if we want to extract from within the extracted values (a hierarchical extraction)?
-The code quickly becomes tricky to write and difficult to understand.
+	rule = '''
+	dict:
+	- key: value1
+	  prefix: <div id="value1">
+	  suffix: </div>
+	  type: int
+	- key: value2
+	  prefix: <div id="value2">
+	  suffix: </div>
+	  type: int
+	'''
+	results = textminer.extract(html, rule)
 
-What is the human way of expressing such a problem?
-A human would say, I want the value between `"<body>"` and `"</body>"`.
-Or in <a href="http://www.yaml.org/" target="_blank">yaml</a>:
-
-	value:
-	  prefix: <body>
-	  suffix: </body>
-
-A more sophisticated example is:
-
-	list:
-	  prefix: <tr>
-	  suffix: </tr>
-	  dict:
-	  - key: id
-	    prefix: <td id="id">
-	    suffix: </td>
-	  - key: value
-	    prefix: <td id="value">
-	    suffix: </td>
-	    type: int
-	    
-It means:
-
-1. Extract all values between `"<tr>"` and `"</tr>"` and form a list
-2. For each list item, extract a string id (between `"<td id="id">"` and `"</td>"`) and an int value (between `"<td id="value">"` and `"</td>"`)
-
-TextMiner enables you to extract values, lists and dicts from text by writing such yaml rules.
+The number of lines may not differ a lot.
+But the rule in the textminer's way is far more clear and expressive.
+This enables you to write very complicated rule for hierarchical extraction (see below).
 
 Installation
 ============
