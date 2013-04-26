@@ -183,13 +183,17 @@ def _compile_pattern(pattern):
     normal text
     >>> _compile_pattern('a|b').match('b', 0)
     (None, -1, -1)
+    >>> _compile_pattern('//a|b//').match('b', 0)
+    (None, -1, -1)
     
     regular expression
-    >>> _compile_pattern('regex:a|b').match('b', 0)
+    >>> _compile_pattern('/a|b/').match('b', 0)
     ('b', 0, 1)
     '''
-    if pattern.startswith('regex:'):
-        return RegexMatcher(pattern[len('regex:'):])
+    if pattern.startswith('//') and pattern.endswith('//'):
+        return StringMatcher(pattern[2:-2])
+    elif pattern.startswith('/') and pattern.endswith('/'):
+        return RegexMatcher(pattern[1:-1])
     else:
         return StringMatcher(pattern)
 
