@@ -2,3 +2,7 @@
 README.txt
 setup.py
 textminer/__init__.py
+textminer/extractors.py
+textminer/filters.py
+textminer/matchers.py
+textminer/util.py
