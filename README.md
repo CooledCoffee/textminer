@@ -222,11 +222,24 @@ Advanced Usage
 	    - float(value) / 100
 	'''
 	result = textminer.extract(html, rule)
+	
+**Regular expressions for prefix & suffix**
+
+Regular expressions are denoted by "/" before and after the string.
+
+	import textminer
+	
+	html = '<html><body><div sessionId="123456789">aaa</div></body></html>'
+	rule = '''
+	value:
+	  prefix: /<div sessionId="\\d+">/
+	  suffix: </div>
+	'''
+	result = textminer.extract(html, rule)
 
 **Using rules of other formats**
 
-Yaml is very expressive for the rules and is the recommended format.
-However, textminer also supports json and raw python dict.
+Yaml is perfect for the rules, but textminer also supports json and raw python dict.
 
 	import textminer
 	
