@@ -148,7 +148,7 @@ Note that the fields in the rule should be in the order they appear in the html.
 	
 **Hierarchical extraction**
 
-The real power of textminer is to do extraction.
+The real power of textminer is to do hierarchical extraction.
 
 	import textminer
 	
@@ -201,7 +201,7 @@ The real power of textminer is to do extraction.
 **Extract from a url**
 
 Since textminer is heavily used on web pages.
-textminer provides a utility function extract_from_url to download html from a specified url and extract from it.
+It provides a utility function extract_from_url to download html and extract from it.
 This saves you a few lines of code.
 
 	import textminer
