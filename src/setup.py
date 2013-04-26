@@ -6,7 +6,7 @@ setup(
     version='1.0.1',
     author='Mengchen LEE',
     author_email='CooledCoffee@gmail.com',
-    description='Extracts values, lists and dicts from text.',
+    description='Extracts content from text using rules.',
     packages=['textminer'],
     url='https://github.com/CooledCoffee/textminer/',
 )
