@@ -64,8 +64,8 @@ Installation
 ============
 pip install textminer
 
-Examples
-========
+Basic Usage
+===========
 **Extract a single value from html**
 
 	import textminer
@@ -142,24 +142,9 @@ Note that the fields in the rule should be in the order they appear in the html.
 	result = textminer.extract(html, rule)
 	# result == 123
 	
-**Filters**
-
-	import textminer
-	
-	html = '<html><body><div>123</div></body></html>'
-	rule = '''
-	value:
-	  prefix: <body>
-	  suffix: </body>
-	  filters:
-	  - stripHtml
-	  - transform:
-	    - float(value) / 100
-	'''
-	result = textminer.extract(html, rule)
-	# result == 1.23
-
 **Hierarchical extraction**
+
+The real power of textminer is to do extraction.
 
 	import textminer
 	
@@ -211,6 +196,10 @@ Note that the fields in the rule should be in the order they appear in the html.
 	
 **Extract from a url**
 
+Since textminer is heavily used on web pages.
+textminer provides a utility function extract_from_url to download html from a specified url and extract from it.
+This saves you a few lines of code.
+
 	import textminer
 	
 	rule = '''
@@ -219,3 +208,37 @@ Note that the fields in the rule should be in the order they appear in the html.
 	  suffix: </title>
 	'''
 	textminer.extract_from_url('http://www.google.com/', rule)
+
+Advanced Usage
+==============
+**Filters**
+
+	import textminer
+	
+	html = '<html><body><div>123</div></body></html>'
+	rule = '''
+	value:
+	  prefix: <body>
+	  suffix: </body>
+	  filters:
+	  - stripHtml
+	  - transform:
+	    - float(value) / 100
+	'''
+	result = textminer.extract(html, rule)
+
+**Using rules of other formats**
+
+Yaml is very expressive for the rules and is the recommended format.
+However, textminer also supports json and raw python dict.
+
+	import textminer
+	
+	html = '<html><body><div>123</div></body></html>'
+	
+	python_rule = {'value': {'prefix': '<body>', 'suffix': '</body>'}}
+	result = textminer.extract(html, python_rule, fmt=None)
+	
+	json_rule = '{"value": {"prefix": "<body>", "suffix": "</body>"}}'
+	result = textminer.extract(html, json_rule, fmt='json')
+	
