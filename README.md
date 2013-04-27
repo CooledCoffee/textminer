@@ -48,8 +48,7 @@ The textminer's way of doing the same thing is:
 	'''
 	results = textminer.extract(html, rule)
 
-The number of lines may not differ a lot.
-But the rule in the textminer's way is far more clear and expressive.
+Textminer uses <a href="http://www.yaml.org/" target="_blank">yaml</a> to define rules, which is far more clear and expressive.
 This enables you to write very complicated rule for hierarchical extraction (see below).
 
 Installation
@@ -59,6 +58,11 @@ pip install textminer
 or
 
 easy_install textminer
+
+Try it yourself
+===============
+
+You can test your rules <a href="http://cs-textminer.appspot.com/" target="_blank">here</a>.
 
 Basic Usage
 ===========
