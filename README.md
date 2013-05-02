@@ -215,17 +215,18 @@ Advanced Usage
 
 	import textminer
 	
-	html = '<html><body><div>123</div></body></html>'
+	html = '<html><body><div>1<b>2</b>3</div></body></html>'
 	rule = '''
 	value:
-	  prefix: <body>
-	  suffix: </body>
+	  prefix: <div>
+	  suffix: </div>
 	  filters:
 	  - stripHtml
 	  - transform:
 	    - float(value) / 100
 	'''
 	result = textminer.extract(html, rule)
+	# result == 1.23
 	
 ### Regular expressions for prefix & suffix ###
 
