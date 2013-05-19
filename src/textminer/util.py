@@ -1,7 +1,15 @@
 # -*- coding: utf-8 -*-
 import doctest
 import re
-import urllib2
+import sys
+if sys.version_info.major == 3:
+    import builtins  # @UnresolvedImport @UnusedImport
+    STRING_TYPE = builtins.str
+    from urllib import request # @UnresolvedImport @UnusedImport
+else:
+    import __builtin__
+    STRING_TYPE = __builtin__.basestring
+    import urllib2 as request  # @Reimport
 
 class Dict(dict):
     '''
@@ -29,8 +37,8 @@ class Dict(dict):
     def __getattr__(self, key):
         try:
             return self[key]
-        except KeyError, k:
-            raise AttributeError(k)
+        except KeyError as e:
+            raise AttributeError(str(e))
     
     def __setattr__(self, key, value): 
         self[key] = value
@@ -38,8 +46,8 @@ class Dict(dict):
     def __delattr__(self, key):
         try:
             del self[key]
-        except KeyError, k:
-            raise AttributeError(k)
+        except KeyError as e:
+            raise AttributeError(str(e))
         
 def compact_html(html):
     '''
@@ -51,13 +59,20 @@ def compact_html(html):
     return html.replace(' <', '<').replace('> ', '>')
 
 def curl(url, charset=None):
-    resp = urllib2.urlopen(url, timeout=30)
+    resp = request.urlopen(url, timeout=30)
     html = resp.read()
     mime, charset_from_header = _parse_mime(resp.headers.get('Content-Type'))
-    charset_from_html = _parse_html_charset(html) if mime == 'text/html' else None
+    if mime == 'text/html':
+        html_as_ascii = html.decode('latin-1', errors='ignore')
+        charset_from_html = _parse_html_charset(html_as_ascii)
+    else:
+        charset_from_html = None
     charset = charset or charset_from_html or charset_from_header or 'utf-8'
-    html = unicode(html, charset or 'utf-8', 'ignore')
+    html = html.decode(charset, errors='ignore')
     return html
+
+def is_python3():
+    return sys.version_info.major == 3
 
 def _parse_mime(value):
     '''

@@ -13,7 +13,7 @@ def compile(rule, fmt='yaml'):
     'ValueExtractor'
     '''
     rule = _parse_rule(rule, fmt)
-    keys = rule.keys()
+    keys = list(rule.keys())
     if len(keys) != 1:
         raise Exception('Rule should have one single root element.')
     parser_type = keys[0]

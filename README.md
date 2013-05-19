@@ -256,3 +256,6 @@ Yaml is perfect for the rules, but textminer also supports json and raw python d
 	json_rule = '{"value": {"prefix": "<body>", "suffix": "</body>"}}'
 	result = textminer.extract(html, json_rule, fmt='json')
 	
+Python3 Support
+===============
+Textminer is tested under python 2.7 and python 3.3.
