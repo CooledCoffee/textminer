@@ -3,6 +3,7 @@ from textminer import extractors, util
 import doctest
 import importlib
 import json
+import requests
 import yaml
 
 def compile(rule, fmt='yaml'):
@@ -28,8 +29,8 @@ def extract(text, rule, fmt='yaml'):
     extractor = compile(rule, fmt=fmt)
     return extractor.extract(text)
 
-def extract_from_url(url, rule, charset=None, fmt='yaml'):
-    html = util.curl(url, charset=charset)
+def extract_from_url(url, rule, fmt='yaml'):
+    html = requests.get(url).text
     html = util.compact_html(html)
     return extract(html, rule, fmt=fmt)
 

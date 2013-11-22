@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name='textminer',
-    version='1.0.2',
+    version='1.1.1',
     author='Mengchen LEE',
     author_email='CooledCoffee@gmail.com',
     classifiers = [
@@ -19,5 +19,6 @@ setup(
     ],
     description='Extracts content from html using rules.',
     packages=['textminer'],
+    install_requires=['requests'],
     url='https://github.com/CooledCoffee/textminer/',
 )

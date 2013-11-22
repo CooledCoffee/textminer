@@ -5,11 +5,9 @@ import sys
 if sys.version_info.major == 3:
     import builtins  # @UnresolvedImport @UnusedImport
     STRING_TYPE = builtins.str
-    from urllib import request # @UnresolvedImport @UnusedImport
 else:
     import __builtin__
     STRING_TYPE = __builtin__.basestring
-    import urllib2 as request  # @Reimport
 
 class Dict(dict):
     '''
@@ -57,19 +55,6 @@ def compact_html(html):
     html = re.sub('\\s', ' ', html)
     html = re.sub(' +', ' ', html)
     return html.replace(' <', '<').replace('> ', '>')
-
-def curl(url, charset=None):
-    resp = request.urlopen(url, timeout=30)
-    html = resp.read()
-    mime, charset_from_header = _parse_mime(resp.headers.get('Content-Type'))
-    if mime == 'text/html':
-        html_as_ascii = html.decode('latin-1', errors='ignore')
-        charset_from_html = _parse_html_charset(html_as_ascii)
-    else:
-        charset_from_html = None
-    charset = charset or charset_from_html or charset_from_header or 'utf-8'
-    html = html.decode(charset, errors='ignore')
-    return html
 
 def is_python3():
     return sys.version_info.major == 3
