@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from textminer import util
 from textminer.filters import DefaultFilter, TypeFilter
 from textminer.matchers import RegexMatcher, StringMatcher
 from textminer.util import Dict
@@ -87,10 +88,18 @@ class DictExtractor(Extractor):
     def extract(self, text):
         '''
         >>> p = DictExtractor([{'key': 'name', 'type': 'string', 'prefix': '<td id="1">', 'suffix': '</td>'}, {'key': 'value', 'type': 'int', 'prefix': '<td id="2">', 'suffix': '</td>'}])
-        >>> p.extract('<tr><td id="1">abc</td><td id="2">123</td></tr>')
-        {'name': 'abc', 'value': 123}
-        >>> p.extract('<tr></tr>')
-        {'name': None, 'value': None}
+        
+        >>> d = p.extract('<tr><td id="1">abc</td><td id="2">123</td></tr>')
+        >>> d['name']
+        'abc'
+        >>> d['value']
+        123
+        
+        >>> d = p.extract('<tr></tr>')
+        >>> d['name'] is None
+        True
+        >>> d['value'] is None
+        True
         '''
         values = Dict()
         end = 0
@@ -145,11 +154,11 @@ def _compile_filter(filter):
     >>> type(filter).__name__
     'TypeFilter'
     '''
-    if isinstance(filter, basestring):
+    if isinstance(filter, util.STRING_TYPE) or isinstance(filter, util.STRING_TYPE):
         type = filter
         args = None
     elif isinstance(filter, dict):
-        type = filter.keys()[0]
+        type = list(filter.keys())[0]
         args = filter[type]
     else:
         raise Exception('Bad filter %s.' % filter)
@@ -169,11 +178,11 @@ def _compile_filters(rule):
         filters.append(TypeFilter(rule['type']))
     if 'filters' in rule:
         for filter in rule['filters']:
-            if isinstance(filter, basestring):
+            if isinstance(filter, util.STRING_TYPE):
                 type = filter
                 args = None
             elif isinstance(filter, dict):
-                type = filter.keys()[0]
+                type = list(filter.keys())[0]
                 args = filter[type]
             filters.append(_create_filter(type, args))
     return filters

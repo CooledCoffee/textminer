@@ -215,17 +215,18 @@ Advanced Usage
 
 	import textminer
 	
-	html = '<html><body><div>123</div></body></html>'
+	html = '<html><body><div>1<b>2</b>3</div></body></html>'
 	rule = '''
 	value:
-	  prefix: <body>
-	  suffix: </body>
+	  prefix: <div>
+	  suffix: </div>
 	  filters:
 	  - stripHtml
 	  - transform:
 	    - float(value) / 100
 	'''
 	result = textminer.extract(html, rule)
+	# result == 1.23
 	
 ### Regular expressions for prefix & suffix ###
 
@@ -255,6 +256,10 @@ Yaml is perfect for the rules, but textminer also supports json and raw python d
 	json_rule = '{"value": {"prefix": "<body>", "suffix": "</body>"}}'
 	result = textminer.extract(html, json_rule, fmt='json')
 	
+Python3 Support
+===============
+Textminer is tested under python 2.7 and python 3.3.
+
 Author
 ======
 
