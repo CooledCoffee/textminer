@@ -259,3 +259,9 @@ Yaml is perfect for the rules, but textminer also supports json and raw python d
 Python3 Support
 ===============
 Textminer is tested under python 2.7 and python 3.3.
+
+Author
+======
+
+Mengchen LEE: <a href="https://plus.google.com/117704742936410336204" target="_blank">Google Plus</a>, <a href="https://cn.linkedin.com/pub/mengchen-lee/30/8/23a" target="_blank">LinkedIn</a>
+
