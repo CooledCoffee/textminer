@@ -1,19 +1,14 @@
+# common
 .*
-*.py[cod]
+*~
+*.swp
 
-# Packages
-*.egg
-*.egg-info
-dist
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
-lib
-lib64
+# python
+*.pyc
+__pycache__
 
-# Installer logs
-pip-log.txt
+# pip
+src/build
+src/dist
+src/MANIFEST
+
