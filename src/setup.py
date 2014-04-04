@@ -19,6 +19,9 @@ setup(
     ],
     description='Extracts content from html using rules.',
     packages=['textminer'],
-    install_requires=['requests'],
+    install_requires=[
+        'six',
+        'requests',
+    ],
     url='https://github.com/CooledCoffee/textminer/',
 )

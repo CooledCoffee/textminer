@@ -1,13 +1,6 @@
 # -*- coding: utf-8 -*-
 import doctest
 import re
-import sys
-if sys.version_info.major == 3:
-    import builtins  # @UnresolvedImport @UnusedImport
-    STRING_TYPE = builtins.str
-else:
-    import __builtin__
-    STRING_TYPE = __builtin__.basestring
 
 class Dict(dict):
     '''
@@ -55,9 +48,6 @@ def compact_html(html):
     html = re.sub('\\s', ' ', html)
     html = re.sub(' +', ' ', html)
     return html.replace(' <', '<').replace('> ', '>')
-
-def is_python3():
-    return sys.version_info.major == 3
 
 def _parse_mime(value):
     '''
