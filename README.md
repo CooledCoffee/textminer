@@ -62,7 +62,7 @@ easy_install textminer
 Demo
 ====
 
-You can test your rules <a href="http://cstudio-textminer.appspot.com/" target="_blank">here</a>.
+You can test your rules <a href="https://cstudio-textminer.appspot.com/" target="_blank">here</a>.
 
 Basic Usage
 ===========
