@@ -55,10 +55,9 @@ Installation
 ============
 pip install textminer
 
-Try it yourself
-===============
-
-You can test your rules <a href="http://cs-textminer.appspot.com/" target="_blank">here</a>.
+Demo
+====
+You can test your rules <a href="https://cstudio-textminer.appspot.com/" target="_blank">here</a>.
 
 Basic Usage
 ===========
@@ -260,4 +259,3 @@ Author
 ======
 
 Mengchen LEE: <a href="https://plus.google.com/117704742936410336204" target="_blank">Google Plus</a>, <a href="https://cn.linkedin.com/pub/mengchen-lee/30/8/23a" target="_blank">LinkedIn</a>
-

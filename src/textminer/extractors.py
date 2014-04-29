@@ -5,6 +5,7 @@ from textminer.matchers import RegexMatcher, StringMatcher
 from textminer.util import Dict
 import doctest
 import importlib
+import six
 
 class Extractor(object):
     def __init__(self, rule):
@@ -154,7 +155,7 @@ def _compile_filter(filter):
     >>> type(filter).__name__
     'TypeFilter'
     '''
-    if isinstance(filter, util.STRING_TYPE) or isinstance(filter, util.STRING_TYPE):
+    if isinstance(filter, six.string_types):
         type = filter
         args = None
     elif isinstance(filter, dict):
@@ -178,7 +179,7 @@ def _compile_filters(rule):
         filters.append(TypeFilter(rule['type']))
     if 'filters' in rule:
         for filter in rule['filters']:
-            if isinstance(filter, util.STRING_TYPE):
+            if isinstance(filter, six.string_types):
                 type = filter
                 args = None
             elif isinstance(filter, dict):
