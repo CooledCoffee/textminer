@@ -55,10 +55,6 @@ Installation
 ============
 pip install textminer
 
-or
-
-easy_install textminer
-
 Try it yourself
 ===============
 
