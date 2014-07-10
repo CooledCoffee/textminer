@@ -57,7 +57,7 @@ pip install textminer
 
 Demo
 ====
-You can test your rules <a href="https://cstudio-textminer.appspot.com/" target="_blank">here</a>.
+You can test your rules <a href="http://textminer.coffee-studio.net/" target="_blank">here</a>.
 
 Basic Usage
 ===========
