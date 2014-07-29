@@ -199,10 +199,14 @@ def _compile_pattern(pattern):
     regular expression
     >>> _compile_pattern('/a|b/').match('b', 0)
     ('b', 0, 1)
+    
+    single slash
+    >>> _compile_pattern('/').match('a/b', 0)
+    ('/', 1, 2)
     '''
     if pattern.startswith('//') and pattern.endswith('//'):
         return StringMatcher(pattern[2:-2])
-    elif pattern.startswith('/') and pattern.endswith('/'):
+    elif len(pattern) >= 2 and pattern.startswith('/') and pattern.endswith('/'):
         return RegexMatcher(pattern[1:-1])
     else:
         return StringMatcher(pattern)
