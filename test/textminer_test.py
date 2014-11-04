@@ -58,6 +58,6 @@ value:
   prefix: <title>
   suffix: </title>
 '''
-        value = textminer.extract_from_url('https://www.google.com', rule)
-        self.assertEquals('Google', value)
+        value = textminer.extract_from_url('http://www.name.com', rule)
+        self.assertIn('Domain Names', value)
         
