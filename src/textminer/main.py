@@ -4,6 +4,8 @@ import json
 import requests
 import yaml
 
+HTTP_TIMEOUT = 30
+
 def compile(rule, fmt='yaml'):
     '''
     >>> rule = {'value': {'prefix': '<body>', 'suffix': '</body>'}}
@@ -30,7 +32,7 @@ def extract(text, rule, fmt='yaml'):
 
 def extract_from_url(url, rule, fmt='yaml'):
     from textminer import util
-    html = requests.get(url).text
+    html = requests.get(url, timeout=HTTP_TIMEOUT).text
     html = util.compact_html(html)
     return extract(html, rule, fmt=fmt)
 
