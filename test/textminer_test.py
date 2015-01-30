@@ -41,7 +41,8 @@ dict:
     - key: value
       prefix: <td>
       suffix: </td>
-      type: int
+      filters:
+      - int
 '''
         result = textminer.extract(html, rule)
         self.assertEquals('title', result['title'])

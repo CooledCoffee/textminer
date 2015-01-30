@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-from textminer import util
-from textminer.filters import DefaultFilter, TypeFilter
+from textminer import filters
 from textminer.matchers import RegexMatcher, StringMatcher
 from textminer.util import Dict
 import doctest
 import importlib
-import six
 
 class Extractor(object):
     def __init__(self, rule):
@@ -21,18 +19,18 @@ class Extractor(object):
     def _compile(self, rule):
         self._prefix_matcher = _compile_pattern(rule['prefix'])
         self._suffix_matcher = _compile_pattern(rule['suffix'])
-        self._filters = _compile_filters(rule)
+        self._filters = _compile_filters(rule.get('filters'))
         self._child = _compile_child(rule)
         
     def _filter(self, value):
         '''
         >>> p = Extractor({'prefix': '<html>', 'suffix': '</html>'})
-        >>> p._filters = [DefaultFilter('0'), TypeFilter('int')]
+        >>> p._filters = ['default(value, "0")', 'int(value)']
         >>> p._filter(None)
         0
         '''
         for f in self._filters:
-            value = f.filter(value)
+            value = eval(f, filters.FILTERS, {'value': value})
         return value
         
     def _process_child(self, value):
@@ -88,13 +86,13 @@ class DictExtractor(Extractor):
         
     def extract(self, text):
         '''
-        >>> p = DictExtractor([{'key': 'name', 'type': 'string', 'prefix': '<td id="1">', 'suffix': '</td>'}, {'key': 'value', 'type': 'int', 'prefix': '<td id="2">', 'suffix': '</td>'}])
+        >>> p = DictExtractor([{'key': 'name', 'prefix': '<td id="1">', 'suffix': '</td>'}, {'key': 'value', 'prefix': '<td id="2">', 'suffix': '</td>'}])
         
         >>> d = p.extract('<tr><td id="1">abc</td><td id="2">123</td></tr>')
         >>> d['name']
         'abc'
         >>> d['value']
-        123
+        '123'
         
         >>> d = p.extract('<tr></tr>')
         >>> d['name'] is None
@@ -138,55 +136,24 @@ def _compile_child(rule):
     else:
         return None
 
-def _compile_filter(filter):
+def _compile_filters(filters):
     '''
-    no arg
-    >>> filter = _compile_filter('stripHtml')
-    >>> type(filter).__name__
-    'StripHtmlFilter'
-    
-    list args
-    >>> filter = _compile_filter({'type': ['int']})
-    >>> type(filter).__name__
-    'TypeFilter'
-    
-    dict args
-    >>> filter = _compile_filter({'type': {'type': 'int'}})
-    >>> type(filter).__name__
-    'TypeFilter'
+    >>> _compile_filters(['int'])
+    ['int(value)']
+    >>> _compile_filters(['default(0)'])
+    ['default(value, 0)']
+    >>> _compile_filters(None)
+    []
     '''
-    if isinstance(filter, six.string_types):
-        type = filter
-        args = None
-    elif isinstance(filter, dict):
-        type = list(filter.keys())[0]
-        args = filter[type]
-    else:
-        raise Exception('Bad filter %s.' % filter)
-    return _create_filter(type, args)
-
-def _compile_filters(rule):
-    '''
-    >>> rule = {'default': '0', 'filters': [{'type': ['int']}]}
-    >>> filters = _compile_filters(rule)
-    >>> [type(f).__name__ for f in filters]
-    ['DefaultFilter', 'TypeFilter']
-    '''
-    filters = []
-    if 'default' in rule:
-        filters.append(DefaultFilter(rule['default']))
-    if 'type' in rule:
-        filters.append(TypeFilter(rule['type']))
-    if 'filters' in rule:
-        for filter in rule['filters']:
-            if isinstance(filter, six.string_types):
-                type = filter
-                args = None
-            elif isinstance(filter, dict):
-                type = list(filter.keys())[0]
-                args = filter[type]
-            filters.append(_create_filter(type, args))
-    return filters
+    results = []
+    if filters is not None:
+        for f in filters:
+            if '(' in f:
+                f = f.replace('(', '(value, ')
+            else:
+                f = f + '(value)'
+            results.append(f)
+    return results
 
 def _compile_pattern(pattern):
     '''
@@ -210,39 +177,6 @@ def _compile_pattern(pattern):
         return RegexMatcher(pattern[1:-1])
     else:
         return StringMatcher(pattern)
-
-def _create_filter(name, args):
-    '''
-    no arg
-    >>> filter = _create_filter('stripHtml', None)
-    >>> type(filter).__name__
-    'StripHtmlFilter'
-    
-    list args
-    >>> filter = _create_filter('type', ['int'])
-    >>> type(filter).__name__
-    'TypeFilter'
-    >>> filter._type
-    'int'
-    
-    dict args
-    >>> filter = _create_filter('type', {'type': 'int'})
-    >>> type(filter).__name__
-    'TypeFilter'
-    >>> filter._type
-    'int'
-    '''
-    if args is None:
-        args = []
-    mod = importlib.import_module('textminer.filters')
-    class_name = name[0].upper() + name[1:] + 'Filter'
-    filter_class = getattr(mod, class_name)
-    if isinstance(args, list):
-        return filter_class(*args)
-    elif isinstance(args, dict):
-        return filter_class(**args)
-    else:
-        raise Exception('Bad filter args %s.' % args)
     
 def _search(prefix_matcher, suffix_matcher, text, start_index=0):
     '''
