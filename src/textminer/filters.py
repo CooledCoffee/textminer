@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from textminer import util
 from datetime import datetime as DateTime
+from textminer import util
 import doctest
 import re
+import six
 
 def default(value, default_value):
     '''
@@ -27,6 +28,17 @@ def datetime(value, format='%Y-%m-%d %H:%M:%S'):
     '''
     return DateTime.strptime(value, format)
 
+def eval(value, expression):
+    '''
+    >>> eval(10, 'value / 10') == 1
+    True
+    '''
+    if six.PY2:
+        import __builtin__ as builtins
+    else:
+        import builtins
+    return builtins.eval(expression, FILTERS, {'value': value})
+
 def strip(value, chars=None):
     '''
     >>> strip(' \tabc def\t ')
@@ -44,10 +56,10 @@ def strip_html(value):
     value = util.compact_html(value)
     return re.sub('<.+?>', '', value)
 
-def _wrap(func):
+def _none_wrapper(func):
     '''
     >>> def func(value): return value + 1
-    >>> func = _wrap(func)
+    >>> func = _none_wrapper(func)
     >>> func(1)
     2
     >>> func(None) is None
@@ -60,16 +72,27 @@ def _wrap(func):
             return func(value, *args)
     return wrapper
 
+def _number_wrapper(func):
+    '''
+    >>> func = _number_wrapper(int)
+    >>> func('1,234,567')
+    1234567
+    '''
+    def wrapper(value, *args):
+        value = value.replace(',', '')
+        return func(value, *args)
+    return wrapper
+
 FILTERS = {
     'default': default,
-    'bool': _wrap(bool),
-    'date': _wrap(date),
-    'datetime': _wrap(datetime),
-    'eval': _wrap(eval),
-    'float': _wrap(float),
-    'int': _wrap(int),
-    'strip': _wrap(strip),
-    'strip_html': _wrap(strip_html),
+    'bool': _none_wrapper(bool),
+    'date': _none_wrapper(date),
+    'datetime': _none_wrapper(datetime),
+    'eval': _none_wrapper(eval),
+    'float': _none_wrapper(_number_wrapper(float)),
+    'int': _none_wrapper(_number_wrapper(int)),
+    'strip': _none_wrapper(strip),
+    'strip_html': _none_wrapper(strip_html),
 }
     
 if __name__ == '__main__':
