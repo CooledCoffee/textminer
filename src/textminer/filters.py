@@ -27,6 +27,15 @@ def datetime(value, format='%Y-%m-%d %H:%M:%S'):
     '''
     return DateTime.strptime(value, format)
 
+def strip(value, chars=None):
+    '''
+    >>> strip(' \tabc def\t ')
+    'abc def'
+    >>> strip('"abc"', '"')
+    'abc'
+    '''
+    return value.strip(chars)
+
 def strip_html(value):
     '''
     >>> strip_html('a<b>b</b>c')
@@ -35,10 +44,10 @@ def strip_html(value):
     value = util.compact_html(value)
     return re.sub('<.+?>', '', value)
 
-def wrap(func):
+def _wrap(func):
     '''
     >>> def func(value): return value + 1
-    >>> func = wrap(func)
+    >>> func = _wrap(func)
     >>> func(1)
     2
     >>> func(None) is None
@@ -53,13 +62,14 @@ def wrap(func):
 
 FILTERS = {
     'default': default,
-    'bool': wrap(bool),
-    'date': wrap(date),
-    'datetime': wrap(datetime),
-    'eval': wrap(eval),
-    'float': wrap(float),
-    'int': wrap(int),
-    'strip_html': wrap(strip_html),
+    'bool': _wrap(bool),
+    'date': _wrap(date),
+    'datetime': _wrap(datetime),
+    'eval': _wrap(eval),
+    'float': _wrap(float),
+    'int': _wrap(int),
+    'strip': _wrap(strip),
+    'strip_html': _wrap(strip_html),
 }
     
 if __name__ == '__main__':
