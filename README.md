@@ -123,20 +123,6 @@ Basic Usage
 
 Note that the fields in the rule should be in the order they appear in the html.
 
-### Specify value type ###
-
-	import textminer
-	
-	html = '<html><body><div>123</div></body></html>'
-	rule = '''
-	value:
-	  prefix: <div>
-	  suffix: </div>
-	  type: int
-	'''
-	result = textminer.extract(html, rule)
-	# result == 123
-	
 ### Hierarchical extraction ###
 
 The real power of textminer is to do hierarchical extraction.
@@ -216,9 +202,9 @@ Advanced Usage
 	  prefix: <div>
 	  suffix: </div>
 	  filters:
-	  - stripHtml
-	  - transform:
-	    - float(value) / 100
+	  - strip_html
+	  - float
+	  - eval('value / 100')
 	'''
 	result = textminer.extract(html, rule)
 	# result == 1.23
