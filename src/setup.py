@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name='textminer',
-    version='1.1.2',
+    version='1.2',
     author='Mengchen LEE',
     author_email='CooledCoffee@gmail.com',
     classifiers = [
