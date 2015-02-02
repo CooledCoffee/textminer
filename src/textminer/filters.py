@@ -37,7 +37,7 @@ def eval(value, expression):
         import __builtin__ as builtins
     else:
         import builtins
-    return builtins.eval(expression, FILTERS, {'value': value})
+    return builtins.eval(expression, {}, {'value': value})
 
 def strip(value, chars=None):
     '''

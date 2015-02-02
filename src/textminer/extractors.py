@@ -3,7 +3,6 @@ from textminer import filters
 from textminer.matchers import RegexMatcher, StringMatcher
 from textminer.util import Dict
 import doctest
-import importlib
 
 class Extractor(object):
     def __init__(self, rule):
@@ -149,7 +148,7 @@ def _compile_filters(filters):
     if filters is not None:
         for f in filters:
             if '(' in f:
-                f = f.replace('(', '(value, ')
+                f = f.replace('(', '(value, ', 1)
             else:
                 f = f + '(value)'
             results.append(f)
