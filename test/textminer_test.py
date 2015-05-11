@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from textminer import util
+from requests.exceptions import HTTPError
+from textminer import util, main
 from textminer.util import Dict
 from unittest.case import TestCase
-import textminer
 
 class ExtractTest(TestCase):
     def test(self):
@@ -44,7 +44,7 @@ dict:
       filters:
       - int
 '''
-        result = textminer.extract(html, rule)
+        result = main.extract(html, rule)
         self.assertEquals('title', result['title'])
         self.assertEquals(2, len(result['items']))
         self.assertEquals('001', result['items'][0]['id'])
@@ -53,12 +53,16 @@ dict:
         self.assertEquals(321, result['items'][1]['value'])
         
 class ExtractFromUrlTest(TestCase):
-    def test(self):
+    def test_normal(self):
         rule = '''
 value:
   prefix: <title>
   suffix: </title>
 '''
-        value = textminer.extract_from_url('http://www.name.com', rule)
+        value = main.extract_from_url('http://www.name.com', rule)
         self.assertIn('Domain Names', value)
+        
+    def test_error(self):
+        with self.assertRaises(HTTPError):
+            main.extract_from_url('http://www.amazon.com/abc', '')
         

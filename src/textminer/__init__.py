@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from textminer import main
+from textminer.main import compile, extract, extract_from_url
 
-compile = main.compile
-extract = main.extract
-extract_from_url = main.extract_from_url
+compile = compile
+extract = extract
+extract_from_url = extract_from_url

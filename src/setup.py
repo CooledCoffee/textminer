@@ -20,8 +20,9 @@ setup(
     description='Extracts content from html using rules.',
     packages=['textminer'],
     install_requires=[
-        'six',
+        'loggingd',
         'requests',
+        'six',
     ],
     url='https://github.com/CooledCoffee/textminer/',
 )

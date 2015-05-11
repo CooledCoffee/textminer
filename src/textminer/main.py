@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from loggingd import log_enter
+from textminer import util
 import doctest
 import json
 import requests
@@ -30,9 +32,11 @@ def extract(text, rule, fmt='yaml'):
     extractor = compile(rule, fmt=fmt)
     return extractor.extract(text)
 
+@log_enter('[DEBUG] Crawling {url} ...')
 def extract_from_url(url, rule, fmt='yaml'):
-    from textminer import util
-    html = requests.get(url, timeout=HTTP_TIMEOUT).text
+    resp = requests.get(url, timeout=HTTP_TIMEOUT)
+    resp.raise_for_status()
+    html = resp.text
     html = util.compact_html(html)
     return extract(html, rule, fmt=fmt)
 
