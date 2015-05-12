@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from distutils.core import setup
+import setuptools
 
 setup(
     name='textminer',
@@ -18,7 +19,8 @@ setup(
         'Topic :: Text Processing :: Markup :: HTML',
     ],
     description='Extracts content from html using rules.',
-    packages=['textminer'],
+    package_dir={'': 'src'},
+    packages=setuptools.find_packages(where='src'),
     install_requires=[
         'loggingd',
         'requests',

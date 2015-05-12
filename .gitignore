@@ -8,7 +8,6 @@
 __pycache__
 
 # pip
-src/build
-src/dist
-src/MANIFEST
+build
+dist
 
