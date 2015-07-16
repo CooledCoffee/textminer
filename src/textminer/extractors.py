@@ -3,9 +3,16 @@ from textminer import filters
 from textminer.matchers import RegexMatcher, StringMatcher
 from textminer.util import Dict
 import doctest
+import loggingd
+
+log = loggingd.getLogger(__name__)
+
+class ExtractError(Exception):
+    pass
 
 class Extractor(object):
     def __init__(self, rule):
+        self._rule = rule
         self._prefix_matcher = None
         self._suffix_matcher = None
         self._filters = None
@@ -13,6 +20,15 @@ class Extractor(object):
         self._compile(rule)
         
     def extract(self, text):
+        try:
+            return self._extract(text)
+        except:
+            short_text = text[:100] + ' ...' if len(text) > 100 else text
+            msg = 'Failed to extract.\nRule:\n%s\nText:\n%s' % (self._rule, short_text)
+            log.warn(msg, exc_info=True)
+            raise ExtractError(msg)
+        
+    def _extract(self, text):
         raise NotImplementedError()
     
     def _compile(self, rule):
@@ -36,7 +52,7 @@ class Extractor(object):
         return self._child.extract(value) if self._child else value
         
 class ValueExtractor(Extractor):
-    def extract(self, text):
+    def _extract(self, text):
         value, _ = self.parse_with_end(text)
         return value
     
@@ -54,7 +70,7 @@ class ValueExtractor(Extractor):
         return value, end
     
 class ListExtractor(Extractor):
-    def extract(self, text):
+    def _extract(self, text):
         '''
         >>> p = ListExtractor({'prefix': '<li>', 'suffix': '</li>'})
         >>> p.extract('<ul><li>item1</li><li>item2</li></ul>')
@@ -83,7 +99,7 @@ class DictExtractor(Extractor):
         self._keys = [field['key'] for field in rule]
         self._children = [create('value', field) for field in rule]
         
-    def extract(self, text):
+    def _extract(self, text):
         '''
         >>> p = DictExtractor([{'key': 'name', 'prefix': '<td id="1">', 'suffix': '</td>'}, {'key': 'value', 'prefix': '<td id="2">', 'suffix': '</td>'}])
         

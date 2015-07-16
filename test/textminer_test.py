@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from requests.exceptions import HTTPError
-from textminer import util, main
-from textminer.util import Dict
+from textminer import main
+from textminer.extractors import ExtractError
 from unittest.case import TestCase
 
 class ExtractTest(TestCase):
-    def test(self):
+    def test_success(self):
         html = '''
 <html>
 <body>
@@ -51,6 +51,19 @@ dict:
         self.assertEquals(123, result['items'][0]['value'])
         self.assertEquals('002', result['items'][1]['id'])
         self.assertEquals(321, result['items'][1]['value'])
+        
+    def test_error(self):
+        html = '<html>...</html>'
+        rule = '''
+value:
+  prefix: <tr>
+  suffix: </tr>
+  value:
+    prefix: <td>
+    suffix: </td>
+'''
+        with self.assertRaises(ExtractError):
+            main.extract(html, rule)
         
 class ExtractFromUrlTest(TestCase):
     def test_normal(self):
