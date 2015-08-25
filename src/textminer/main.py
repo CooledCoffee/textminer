@@ -34,7 +34,8 @@ def extract(text, rule, fmt='yaml'):
 
 @log_enter('[DEBUG] Crawling {url} ...')
 def extract_from_url(url, rule, fmt='yaml'):
-    resp = requests.get(url, timeout=HTTP_TIMEOUT)
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.81 Chrome/43.0.2357.81 Safari/537.36'}
+    resp = requests.get(url, headers=headers, timeout=HTTP_TIMEOUT)
     resp.raise_for_status()
     html = resp.text
     html = util.compact_html(html)
