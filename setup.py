@@ -4,7 +4,7 @@ import setuptools
 
 setup(
     name='textminer',
-    version='1.2.2',
+    version='1.2.3',
     author='Mengchen LEE',
     author_email='CooledCoffee@gmail.com',
     classifiers = [
@@ -26,5 +26,5 @@ setup(
         'requests',
         'six',
     ],
-    url='https://github.com/CooledCoffee/textminer/',
+    url='https://package-insights.appspot.com/packages/textminer'
 )
