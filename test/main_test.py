@@ -1,8 +1,50 @@
 # -*- coding: utf-8 -*-
 from requests.exceptions import HTTPError
+from requests.models import Response
 from textminer import main
 from textminer.extractors import ExtractError
 from unittest.case import TestCase
+import six
+if six.PY2:
+    from StringIO import StringIO  # @UnusedImport
+else:
+    from io import BytesIO as StringIO  # @Reimport
+
+class DecodeRespTest(TestCase):
+    def test_basic(self):
+        html = '''<html>
+<head>
+</head>
+aaa
+</html>'''
+        resp = Response()
+        resp.raw = StringIO(html.encode('latin-1'))
+        result = main._decode_resp(resp)
+        self.assertIn('aaa', result)
+        
+    def test_encoding_in_html_header_1(self):
+        html = u'''<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+</head>
+中文
+</html>'''
+        resp = Response()
+        resp.raw = StringIO(html.encode('gb2312'))
+        result = main._decode_resp(resp)
+        self.assertIn(u'中文', result)
+        
+    def test_encoding_in_html_header_2(self):
+        html = u'''<html>
+<head>
+<meta charset="gb2312">
+</head>
+中文
+</html>'''
+        resp = Response()
+        resp.raw = StringIO(html.encode('gb2312'))
+        result = main._decode_resp(resp)
+        self.assertIn(u'中文', result)
 
 class ExtractTest(TestCase):
     def test_success(self):
