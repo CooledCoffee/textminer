@@ -5,14 +5,18 @@ import doctest
 import re
 import six
 
-def default(value, default_value):
+def default(value, default_value, empty_value=None):
     '''
-    >>> default(1, 0)
-    1
-    >>> default(None, 0)
-    0
+    >>> default('1', '0')
+    '1'
+    >>> default(None, '0')
+    '0'
+    >>> default('', '0')
+    ''
+    >>> default('', '0', empty_value='')
+    '0'
     '''
-    return default_value if value is None else value
+    return default_value if value == empty_value else value
 
 def date(value, format='%Y-%m-%d'):
     '''
