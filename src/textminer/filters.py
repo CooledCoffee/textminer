@@ -69,11 +69,11 @@ def _none_wrapper(func):
     >>> func(None) is None
     True
     '''
-    def wrapper(value, *args):
+    def wrapper(value, *args, **kw):
         if value is None:
             return None
         else:
-            return func(value, *args)
+            return func(value, *args, **kw)
     return wrapper
 
 def _number_wrapper(func):
@@ -82,9 +82,9 @@ def _number_wrapper(func):
     >>> func('1,234,567')
     1234567
     '''
-    def wrapper(value, *args):
+    def wrapper(value, *args, **kw):
         value = value.replace(',', '')
-        return func(value, *args)
+        return func(value, *args, **kw)
     return wrapper
 
 FILTERS = {
