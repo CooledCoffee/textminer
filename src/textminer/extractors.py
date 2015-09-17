@@ -49,7 +49,21 @@ class Extractor(object):
         return value
         
     def _process_child(self, value):
-        return self._child.extract(value) if self._child else value
+        '''
+        >>> e = Extractor({'prefix': '<html>', 'suffix': '</html>'})
+        >>> e._process_child('<div>aaa</div>')
+        '<div>aaa</div>'
+        
+        >>> e._child = ValueExtractor({'prefix': '<div>', 'suffix': '</div>'})
+        >>> e._process_child('<div>aaa</div>')
+        'aaa'
+        
+        >>> e._process_child(None) is None
+        True
+        '''
+        if self._child is None or value is None:
+            return value
+        return self._child.extract(value)
         
 class ValueExtractor(Extractor):
     def _extract(self, text):

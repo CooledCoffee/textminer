@@ -98,11 +98,10 @@ dict:
         html = '<html>...</html>'
         rule = '''
 value:
-  prefix: <tr>
-  suffix: </tr>
-  value:
-    prefix: <td>
-    suffix: </td>
+  prefix: <html>
+  suffix: </html>
+  filters:
+  - int
 '''
         with self.assertRaises(ExtractError):
             main.extract(html, rule)
