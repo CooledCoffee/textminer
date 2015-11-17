@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import doctest
 import re
+import requests
 
 class Dict(dict):
     '''
@@ -49,63 +50,47 @@ def compact_html(html):
     html = re.sub(' +', ' ', html)
     return html.replace(' <', '<').replace('> ', '>')
 
-def _parse_mime(value):
-    '''
-    no Content-Type header
-    >>> _parse_mime(None)
-    (None, None)
-    
-    text/html
-    >>> _parse_mime('text/html; charset=utf-8')
-    ('text/html', 'utf-8')
-    >>> _parse_mime('text/html;charset=utf-8')
-    ('text/html', 'utf-8')
-    >>> _parse_mime('text/html; charset=UTF-8')
-    ('text/html', 'utf-8')
-    
-    text/html with no charset
-    >>> _parse_mime('text/html')
-    ('text/html', None)
-    
-    non text/html
-    >>> _parse_mime('application/json')
-    ('application/json', None)
-    '''
-    if value is None:
-        return None, None
-    ss = value.split(';')
-    ss = [s.strip().lower() for s in ss]
-    mime = ss[0]
-    charset = ss[1].split('=')[1].lower() if len(ss) > 1 else None
-    return mime, charset
+def curl(url, charset=None):
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.81 Chrome/43.0.2357.81 Safari/537.36'}
+    resp = requests.get(url, headers=headers, timeout=30)
+    resp.raise_for_status()
+    if resp.headers.get('Content-Type', '').startswith('text/html'):
+        charset = _detect_charset(resp.text[:1024])
+        if charset is not None:
+            resp.encoding = charset
+    return compact_html(resp.text)
 
-def _parse_html_charset(html):
+_CHARSET_PATTERNS = [
+    re.compile('<meta http-equiv="Content-Type" content="text/html; charset=(.*)"', re.IGNORECASE),
+    re.compile('<meta charset="(.*)"', re.IGNORECASE),
+]
+def _detect_charset(head):
     '''
-    >>> html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head></html>'
-    >>> _parse_html_charset(html)
+    >>> html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>'
+    >>> _detect_charset(html)
     'utf-8'
     
-    >>> html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head></html>'
-    >>> _parse_html_charset(html)
+    >>> html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>'
+    >>> _detect_charset(html)
     'utf-8'
     
-    >>> html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head></html>'
-    >>> _parse_html_charset(html)
+    >>> html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>'
+    >>> _detect_charset(html)
     'utf-8'
     
-    >>> html = '<html></html>'
-    >>> _parse_html_charset(html) is None
+    >>> html = '<html><head><meta charset="utf-8"></head>'
+    >>> _detect_charset(html)
+    'utf-8'
+    
+    >>> html = '<html>'
+    >>> _detect_charset(html) is None
     True
     '''
-    html = html.lower()
-    m = re.search('<meta http-equiv="content-type" content="(.+?)"', html)
-    if m:
-        mime = m.group(1)
-        _, charset = _parse_mime(mime)
-        return charset
-    else:
-        return None
-
+    for pattern in _CHARSET_PATTERNS:
+        match = pattern.search(head)
+        if match is not None:
+            return match.group(1)
+        
 if __name__ == '__main__':
     doctest.testmod()
     
