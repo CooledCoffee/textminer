@@ -4,7 +4,7 @@ import setuptools
 
 setup(
     name='textminer',
-    version='1.2.6',
+    version='1.2.7',
     author='Mengchen LEE',
     author_email='CooledCoffee@gmail.com',
     classifiers = [
