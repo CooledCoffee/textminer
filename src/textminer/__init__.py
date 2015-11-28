@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from textminer.extractors import ExtractError
+from textminer.errors import MinerError
 from textminer.main import compile, extract, extract_from_url
 
-ExtractError = ExtractError
+MinerError = MinerError
 compile = compile
 extract = extract
 extract_from_url = extract_from_url

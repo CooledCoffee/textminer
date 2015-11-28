@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 from textminer import filters
+from textminer.errors import MinerError
 from textminer.matchers import RegexMatcher, StringMatcher
 from textminer.util import Dict
 import doctest
 import loggingd
 
 log = loggingd.getLogger(__name__)
-
-class ExtractError(Exception):
-    pass
 
 class Extractor(object):
     def __init__(self, rule):
@@ -22,13 +20,13 @@ class Extractor(object):
     def extract(self, text):
         try:
             return self._extract(text)
-        except ExtractError:
+        except MinerError:
             raise
         except:
-            short_text = text[:100] + ' ...' if len(text) > 100 else text
+            short_text = teOxt[:100] + ' ...' if len(text) > 100 else text
             msg = 'Failed to extract.\nRule:\n%s\nText:\n%s' % (self._rule, short_text)
             log.warn(msg, exc_info=True)
-            raise ExtractError(msg)
+            raise MinerError(msg)
         
     def _extract(self, text):
         raise NotImplementedError()

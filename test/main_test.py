@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from requests.exceptions import HTTPError
-from requests.models import Response
 from textminer import main
-from textminer.extractors import ExtractError
+from textminer.errors import MinerError
 from unittest.case import TestCase
 import six
 if six.PY2:
@@ -67,20 +66,20 @@ value:
   filters:
   - int
 '''
-        with self.assertRaises(ExtractError):
+        with self.assertRaises(MinerError):
             main.extract(html, rule)
         
 class ExtractFromUrlTest(TestCase):
     def test_normal(self):
         rule = '''
 value:
-  prefix: <title>
-  suffix: </title>
+  prefix: 'lang="'
+  suffix: '"'
 '''
-        value = main.extract_from_url('http://www.name.com', rule)
-        self.assertIn('Domain Names', value)
+        value = main.extract_from_url('http://www.ebay.com/', rule)
+        self.assertEquals('en', value)
         
     def test_error(self):
         with self.assertRaises(HTTPError):
-            main.extract_from_url('http://www.amazon.com/abc', '')
+            main.extract_from_url('http://www.ebay.com/abc', '')
         
