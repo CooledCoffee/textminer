@@ -22,6 +22,8 @@ class Extractor(object):
     def extract(self, text):
         try:
             return self._extract(text)
+        except ExtractError:
+            raise
         except:
             short_text = text[:100] + ' ...' if len(text) > 100 else text
             msg = 'Failed to extract.\nRule:\n%s\nText:\n%s' % (self._rule, short_text)
