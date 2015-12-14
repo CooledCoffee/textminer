@@ -23,7 +23,7 @@ class Extractor(object):
         except MinerError:
             raise
         except:
-            short_text = teOxt[:100] + ' ...' if len(text) > 100 else text
+            short_text = text[:100] + ' ...' if len(text) > 100 else text
             msg = 'Failed to extract.\nRule:\n%s\nText:\n%s' % (self._rule, short_text)
             log.warn(msg, exc_info=True)
             raise MinerError(msg)
