@@ -81,5 +81,5 @@ value:
         
     def test_error(self):
         with self.assertRaises(HTTPError):
-            main.extract_from_url('http://www.ebay.com/abc', '')
+            main.extract_from_url('http://www.ip138.com/abc', '')
         
