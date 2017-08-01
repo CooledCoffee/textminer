@@ -26,5 +26,5 @@ setup(
         'requests',
         'six',
     ],
-    url='https://package-insights.appspot.com/packages/textminer'
+    url='https://github.com/cooledcoffee/textminer'
 )
