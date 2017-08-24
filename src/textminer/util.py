@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-import doctest
 import re
+
 import requests
+
+_TIMEOUT = 30
 
 class Dict(dict):
     '''
@@ -52,7 +54,7 @@ def compact_html(html):
 
 def curl(url, charset=None):
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.81 Chrome/43.0.2357.81 Safari/537.36'}
-    resp = requests.get(url, headers=headers, timeout=30)
+    resp = requests.get(url, headers=headers, timeout=_TIMEOUT)
     resp.raise_for_status()
     if charset is None and resp.headers.get('Content-Type', '').startswith('text/html'):
         charset = _detect_charset(resp.text[:1024])
@@ -91,7 +93,3 @@ def _detect_charset(head):
         match = pattern.search(head)
         if match is not None:
             return match.group(1)
-        
-if __name__ == '__main__':
-    doctest.testmod()
-    
